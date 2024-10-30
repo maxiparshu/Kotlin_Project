@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "772386214712",
+    "project_id": "restapp-b6174",
+    "storage_bucket": "restapp-b6174.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772386214712:android:eeaf3807adc8e89d4fa7cd",
+        "android_client_info": {
+          "package_name": "com.example.restoranapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1_i0GSp6eemNDWh8-Qyo8abL-syjKidE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
