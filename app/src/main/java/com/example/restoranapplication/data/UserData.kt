@@ -9,7 +9,7 @@ data class ReviewData (
 )
 data class UserData (
     @Exclude var id: String = "",
-    @PropertyName("admin")val isAdmin : Boolean = false,
+    @PropertyName("admin") var isAdmin : Boolean = false,
     val login : String = "",
     val password: String = "",
     var reviews: List<ReviewData> = emptyList(),

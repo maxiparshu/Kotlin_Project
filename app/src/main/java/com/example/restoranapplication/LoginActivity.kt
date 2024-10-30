@@ -14,13 +14,14 @@ import com.example.restoranapplication.data.findUserByLogin
 class LoginActivity : BaseActivity() {
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
         val userList = getUserList()
         val button = findViewById<Button>(R.id.returnButton)
         button.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
         val loginEdit = findViewById<EditText>(R.id.buttonLogin)
         val passwordEdit = findViewById<EditText>(R.id.password)
@@ -55,6 +56,7 @@ class LoginActivity : BaseActivity() {
                 ).show()
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
+                finish()
                 return@setOnClickListener
             }
             showDialog("Error", "Аккаунт с введеным логином уже существует")
@@ -100,6 +102,7 @@ class LoginActivity : BaseActivity() {
             ).show()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

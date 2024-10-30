@@ -2,19 +2,16 @@ package com.example.restoranapplication.data
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
 fun addUser(user: UserData) {
     val db = Firebase.firestore
     db.collection("users").add(user)
         .addOnSuccessListener { documentReference ->
+            user.id = documentReference.id
             Log.d("Firestore", "User added with ID: ${documentReference.id}")
         }
         .addOnFailureListener { e ->

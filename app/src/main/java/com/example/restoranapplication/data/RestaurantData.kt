@@ -1,7 +1,6 @@
 package com.example.restoranapplication.data
 
 import com.google.firebase.firestore.Exclude
-import java.time.temporal.TemporalAmount
 
 data class MenuItem(
     val dishName: String = "",
@@ -12,6 +11,7 @@ data class RestaurantData(
     @Exclude var id: String = "",
     var name: String = "",
     var menu: List<MenuItem> = emptyList(),
+    var address: String = "",
     var imageURL: String = "",
     var rating: Float = 0.0F,
     var ratesAmount: Int = 0

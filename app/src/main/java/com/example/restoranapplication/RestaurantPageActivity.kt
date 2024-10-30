@@ -10,9 +10,11 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.restoranapplication.data.MenuItem
 import com.example.restoranapplication.data.ReviewData
+import com.example.restoranapplication.data.getAllRestaurants
 import com.example.restoranapplication.data.updateRestaurant
 import com.example.restoranapplication.data.updateUsers
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,10 @@ class RestaurantPageActivity : BaseActivity() {
 
             val name = findViewById<TextView>(R.id.restaurantPageName)
             name.text = restaurant.name
+
+            val address = findViewById<TextView>(R.id.restAdress)
+
+            address.text = restaurant.address
 
             val menuButton = findViewById<Button>(R.id.menuButton)
 
@@ -61,8 +67,9 @@ class RestaurantPageActivity : BaseActivity() {
                             restaurant.ratesAmount++
                             saveRestaurant(restaurant)
                             updateRestaurant(restaurantId = restaurant.id, restaurant)
-                        } else {
-                            ratingBar.rating = restaurant.rating
+                            lifecycleScope.launch {
+                                saveRestList(getAllRestaurants())
+                            }
                         }
                     }
                 }
@@ -76,6 +83,7 @@ class RestaurantPageActivity : BaseActivity() {
             returnButton.setOnClickListener {
                 val intent = Intent(this, RestaurantListActivity::class.java)
                 startActivity(intent)
+                finish()
             }
 
             val favourite = findViewById<Button>(R.id.favButton)
@@ -90,6 +98,7 @@ class RestaurantPageActivity : BaseActivity() {
         } else {
             val intent = Intent(this, RestaurantListActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

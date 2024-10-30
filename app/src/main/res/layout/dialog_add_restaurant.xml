@@ -13,19 +13,25 @@
             android:id="@+id/editTextRestaurantName"
             android:layout_width="match_parent"
             android:layout_height="114dp"
-            android:hint="Имя ресторана" />
+            android:autofillHints="Имя ресторана" />
 
         <EditText
             android:id="@+id/editTextMenuItems"
             android:layout_width="match_parent"
             android:layout_height="112dp"
-            android:hint="Меню (например: Пицца-12.99, Суши-8.50)" />
+            android:autofillHints ="Меню (например: Пицца-12.99, Суши-8.50)" />
 
         <EditText
             android:id="@+id/editTextImageUrl"
             android:layout_width="match_parent"
             android:layout_height="148dp"
-            android:hint="URL изображения" />
+            android:autofillHints="URL изображения" />
+
+        <EditText
+            android:id="@+id/editAddress"
+            android:layout_width="match_parent"
+            android:layout_height="162dp"
+            android:autofillHints="Адрес ресторана" />
 
     </LinearLayout>
 </ScrollView>

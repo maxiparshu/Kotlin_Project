@@ -23,7 +23,7 @@ class RestaurantListActivity : BaseActivity() {
         val editTextName = dialogView.findViewById<EditText>(R.id.editTextRestaurantName)
         val editTextMenuItems = dialogView.findViewById<EditText>(R.id.editTextMenuItems)
         val editTextImageUrl = dialogView.findViewById<EditText>(R.id.editTextImageUrl)
-
+        val editAddress = dialogView.findViewById<EditText>(R.id.editAddress)
         AlertDialog.Builder(this)
             .setTitle("Добавить ресторан")
             .setView(dialogView)
@@ -31,6 +31,7 @@ class RestaurantListActivity : BaseActivity() {
                 val name = editTextName.text.toString()
                 val menuItemsText = editTextMenuItems.text.toString()
                 val imageUrl = editTextImageUrl.text.toString()
+                val addressText = editAddress.text.toString()
 
                 if (name.isNotEmpty() && menuItemsText.isNotEmpty() && imageUrl.isNotEmpty()) {
                     try {
@@ -44,6 +45,7 @@ class RestaurantListActivity : BaseActivity() {
                             menu = menuItems,
                             imageURL = imageUrl,
                             rating = 0.0f,
+                            address = addressText,
                             ratesAmount = 0
                         )
                         addRestaurant(restaurant)
@@ -92,6 +94,7 @@ class RestaurantListActivity : BaseActivity() {
         returnButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         val addButton = findViewById<Button>(R.id.addButton)
