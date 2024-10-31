@@ -10,10 +10,12 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.restoranapplication.data.MenuItem
+import com.example.restoranapplication.data.RestaurantInfo
 import com.example.restoranapplication.data.ReviewData
+import com.example.restoranapplication.data.findFavouritesByRestaurantID
+import com.example.restoranapplication.data.findReviewByRestaurantID
 import com.example.restoranapplication.data.getAllRestaurants
 import com.example.restoranapplication.data.updateRestaurant
 import com.example.restoranapplication.data.updateUsers
@@ -55,25 +57,44 @@ class RestaurantPageActivity : BaseActivity() {
                     CoroutineScope(Dispatchers.Main).launch {
                         val isConfirmed = showConfirmationDialog(rating)
                         if (isConfirmed) {
-                            // Логика для подтвержденного рейтинга
                             Toast.makeText(
                                 this@RestaurantPageActivity,
                                 "Оценка $rating сохранена",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            ratingBar.rating =
-                                (restaurant.rating * restaurant.ratesAmount + rating) / (restaurant.ratesAmount + 1)
-                            restaurant.rating = ratingBar.rating
-                            restaurant.ratesAmount++
+
+
+                            val mutTemp = loggedUser.reviews.toMutableList()
+                            val review = ReviewData(
+                                rating = rating,
+                                rest = restaurant.id,
+                                name = restaurant.name
+                            )
+                            if (findReviewByRestaurantID(mutTemp, restaurant.id)) {
+                                ratingBar.rating =
+                                    (restaurant.rating * restaurant.ratesAmount + rating) /
+                                            (restaurant.ratesAmount)
+                                restaurant.rating = ratingBar.rating
+                                mutTemp.replaceAll { reviews ->
+                                    if (reviews.rest == restaurant.id) review else reviews
+                                }
+                            } else {
+                                ratingBar.rating =
+                                    (restaurant.rating * restaurant.ratesAmount + rating) /
+                                            (restaurant.ratesAmount + 1)
+                                restaurant.rating = ratingBar.rating
+                                restaurant.ratesAmount++
+                                mutTemp.add(review)
+                            }
+                            showReviewDialog(restaurant.id, restaurant.name)
+                            loggedUser.reviews = mutTemp.toList()
+                            updateUsers(loggedUser.id, loggedUser)
                             saveRestaurant(restaurant)
                             updateRestaurant(restaurantId = restaurant.id, restaurant)
-                            lifecycleScope.launch {
-                                saveRestList(getAllRestaurants())
-                            }
+                            saveRestList(getAllRestaurants())
                         }
                     }
-                }
-                else {
+                } else {
                     showDialog("Warning", "Сначала зайдите в аккаунт")
                     ratingBar.rating = restaurant.rating
                 }
@@ -81,17 +102,46 @@ class RestaurantPageActivity : BaseActivity() {
 
             val returnButton = findViewById<Button>(R.id.returnButtonRestoranPage)
             returnButton.setOnClickListener {
-                val intent = Intent(this, RestaurantListActivity::class.java)
-                startActivity(intent)
-                finish()
+                val callingActivityName = intent.getStringExtra("calling_activity")
+                if (callingActivityName != null) {
+                    val callingActivityClass =
+                        Class.forName(callingActivityName) // Получаем класс из имени
+                    val intent = Intent(this, callingActivityClass)
+                    startActivity(intent)
+                    finish()
+                }
             }
 
             val favourite = findViewById<Button>(R.id.favButton)
-            favourite.setOnClickListener{
+            favourite.setOnClickListener {
                 if (flagIsUserLogged) {
-                    showReviewDialog(restaurant.name)
-                }
-                else {
+                    val favourites = loggedUser.favouriteRest.toMutableList()
+                    if (findFavouritesByRestaurantID(
+                            loggedUser.favouriteRest,
+                            restaurant.id
+                        ) != null
+                    ) {
+                        Toast.makeText(
+                            this@RestaurantPageActivity,
+                            "Убрано из любимого",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        favourites.removeIf { it.rest == restaurant.id }
+                        loggedUser.favouriteRest = favourites.toList()
+                        updateUsers(loggedUser.id, loggedUser)
+                    } else {
+
+                        Toast.makeText(
+                            this@RestaurantPageActivity,
+                            "Добавлено в любимое",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        favourites.add(RestaurantInfo(rest = restaurant.id, name = restaurant.name))
+                        loggedUser.favouriteRest = favourites.toList()
+                        updateUsers(loggedUser.id, loggedUser)
+                    }
+
+                } else {
                     showDialog("Warning", "Сначала зайдите в аккаунт")
                 }
             }
@@ -129,7 +179,8 @@ class RestaurantPageActivity : BaseActivity() {
             dialog.show()
         }
     }
-    private fun showReviewDialog(restaurantName : String) {
+
+    private fun showReviewDialog(restaurantId: String, name: String) {
         // Создаем поля для ввода текста рецензии и названия ресторана
         val reviewEditText = EditText(this).apply {
             hint = "Введите текст рецензии"
@@ -147,10 +198,10 @@ class RestaurantPageActivity : BaseActivity() {
             .setPositiveButton("Сохранить") { _, _ ->
                 val reviewText = reviewEditText.text.toString()
                 if (reviewText.isNotBlank()) {
-                    val review = ReviewData(text = reviewText, restName = restaurantName)
+                    val review = ReviewData(text = reviewText, rest = restaurantId, name = name)
                     val tempList = loggedUser.reviews.toMutableList()
                     tempList.add(review)
-                    loggedUser.reviews =  tempList.toList()
+                    loggedUser.reviews = tempList.toList()
                     updateUsers(loggedUser.id, loggedUser)
                 }
             }

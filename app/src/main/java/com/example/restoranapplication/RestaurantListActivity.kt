@@ -12,9 +12,12 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.example.restoranapplication.data.MenuItem
 import com.example.restoranapplication.data.RestaurantData
 import com.example.restoranapplication.data.addRestaurant
+import com.example.restoranapplication.data.getAllRestaurants
+import kotlinx.coroutines.launch
 
 
 class RestaurantListActivity : BaseActivity() {
@@ -49,9 +52,12 @@ class RestaurantListActivity : BaseActivity() {
                             ratesAmount = 0
                         )
                         addRestaurant(restaurant)
-                        val rest = getRestList().toMutableList()
-                        rest.add(restaurant)
-                        saveRestList(rest)
+                        lifecycleScope.launch {
+                            saveRestList(getAllRestaurants())
+                            val intent = intent
+                            finish() // Завершаем текущую активность
+                            startActivity(intent)
+                        }
                         val restaurantListView = findViewById<ListView>(R.id.restaurantList)
                         val restaurantList = getRestList()
                         restaurantListView.adapter =
@@ -109,10 +115,12 @@ class RestaurantListActivity : BaseActivity() {
 
         val restaurantListView = findViewById<ListView>(R.id.restaurantList)
         val restaurantList = getRestList()
-        restaurantListView.adapter =
-            RestaurantItemAdapter(
-                this, R.layout.restaraunt_list_item,
-                loggedUser.isAdmin, restaurantList, this
-            )
+        if (restaurantList.isNotEmpty()) {
+            restaurantListView.adapter =
+                RestaurantItemAdapter(
+                    this, R.layout.restaraunt_list_item,
+                    loggedUser.isAdmin, restaurantList, this
+                )
+        }
     }
 }

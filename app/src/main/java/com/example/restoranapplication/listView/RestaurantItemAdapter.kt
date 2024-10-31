@@ -1,3 +1,4 @@
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.restoranapplication.R
+import com.example.restoranapplication.RestaurantListActivity
 import com.example.restoranapplication.RestaurantPageActivity
 import com.example.restoranapplication.data.RestaurantData
 import com.example.restoranapplication.data.deleteRestaurant
@@ -30,6 +32,7 @@ class RestaurantItemAdapter(
 
         val imageViewRestaurantIcon = view.findViewById<ImageView>(R.id.imageViewRestaurantIcon)
         val textViewRestaurantName = view.findViewById<TextView>(R.id.textViewRestaurantName)
+        val textViewRestaurantAddress = view.findViewById<TextView>(R.id.textViewRestaurantAddress)
         val barRestaurantRating = view.findViewById<RatingBar>(R.id.barRestaurantRating)
         val deleteButton = view.findViewById<ImageView>(R.id.imageViewDelete)
         val restaurant = restaurants[position]
@@ -50,12 +53,16 @@ class RestaurantItemAdapter(
                     deleteRestaurant(restaurant.id)
                     restaurants = mutableRest
                     listener.saveRestList(restaurants)
+                    val intent = Intent(context, RestaurantListActivity::class.java)
+                    context.startActivity(intent)
+                    (context as? Activity)?.finish()
                 }
                 .setNegativeButton("Нет", null)
                 .show()
         }
 
         textViewRestaurantName.text = restaurant.name
+        textViewRestaurantAddress.text = restaurant.address
 
         barRestaurantRating.isEnabled = true
         barRestaurantRating.setIsIndicator(true)
@@ -69,7 +76,9 @@ class RestaurantItemAdapter(
         view.setOnClickListener {
             listener.saveRestaurant(restaurant)
             val intent = Intent(context, RestaurantPageActivity::class.java)
+                .putExtra("calling_activity", RestaurantListActivity::class.java.name)
             context.startActivity(intent)
+            (context as? Activity)?.finish()
         }
 
         return view

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.restoranapplication.R
+import com.example.restoranapplication.UsersPageActivity
 import com.example.restoranapplication.data.RestaurantData
 import com.example.restoranapplication.data.UserData
 import com.example.restoranapplication.data.`interface`.OnRestaurantSelectedListener
@@ -40,7 +41,12 @@ class UsersItemAdapter(
         }
         view.setOnClickListener {
             user?.let {
-                context.showReviewsDialog(it.reviews, rests, listener)
+                context.showReviewsDialog(
+                    it.reviews,
+                    rests,
+                    listener,
+                    UsersPageActivity::class.java.name
+                )
             }
         }
         return view

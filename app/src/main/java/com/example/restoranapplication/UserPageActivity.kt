@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import com.example.restoranapplication.helpers.showReviewsDialog
 
 class UserPageActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
@@ -14,10 +15,16 @@ class UserPageActivity : BaseActivity() {
         val loginLabel = findViewById<TextView>(R.id.loginPage)
         val statusLabel = findViewById<TextView>(R.id.status)
         val idLabel = findViewById<TextView>(R.id.idText)
+        val reviewButton = findViewById<Button>(R.id.reviewUserPage)
+
+
         loginLabel.clearComposingText()
         idLabel.clearComposingText()
         idLabel.text ="id: ${loggedUser.id}"
         loginLabel.text = loggedUser.login
+        reviewButton.setOnClickListener{
+            this.showReviewsDialog(loggedUser.reviews, getRestList(), this, UserPageActivity::class.java.name)
+        }
         if (loggedUser.isAdmin)
             statusLabel.text = "Администратор"
         else

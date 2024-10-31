@@ -21,13 +21,17 @@ fun addUser(user: UserData) {
 
 suspend fun getAllUsers(): List<UserData> {
     val db = Firebase.firestore
+    val users = mutableListOf<UserData>()
     return try {
         val result = db.collection("users").get().await()
-        result.map { document ->
-            document.toObject(UserData::class.java).apply {
+        result.forEach { document ->
+            val user = document.toObject(UserData::class.java).apply {
                 id = document.id // Устанавливаем id документа
             }
+            Log.w("Firestore", "With id ${user.id}")
+            users.add(user) // Добавляем объект UserData в список users
         }
+        users
     } catch (e: Exception) {
         emptyList() // Возвращаем пустой список в случае ошибки
     }
@@ -38,34 +42,39 @@ fun updateUsers(userId: String, updatedData: UserData) {
         .document(userId)
         .set(updatedData, SetOptions.merge())
         .addOnSuccessListener {
-            Log.d(TAG, "Users updated successfully.")
+            Log.w("Firestore", "Users updated successfully.")
         }
         .addOnFailureListener { e ->
-            Log.w(TAG, "Error updating users.", e)
+            Log.w("Firestore", "Error updating users.", e)
         }
 }
-fun addRestaurant(restaurant: RestaurantData) {
+fun addRestaurant(restaurant: RestaurantData): RestaurantData {
     val db = Firebase.firestore
     db.collection("restaurants").add(restaurant)
         .addOnSuccessListener { documentReference ->
             restaurant.id = documentReference.id
-            Log.d("Firestore", "Restaurant added with ID: ${documentReference.id}")
+            Log.w("Firestore", "Restaurant added with ID: ${restaurant.id}")
         }
         .addOnFailureListener { e ->
             Log.w("Firestore", "Error adding restaurant", e)
         }
+    return restaurant
 }
 
 
 suspend fun getAllRestaurants(): List<RestaurantData> {
     val db = Firebase.firestore
+    val restaurants = mutableListOf<RestaurantData>()
     return try {
         val result = db.collection("restaurants").get().await()
-        result.map { document ->
-            document.toObject(RestaurantData::class.java).apply {
+        result.forEach { document ->
+            val restaurant = document.toObject(RestaurantData::class.java).apply {
                 id = document.id // Устанавливаем id документа
             }
+            Log.w("Firestore", "Restaurant with id ${restaurant.id}")
+            restaurants.add(restaurant) // Добавляем объект UserData в список users
         }
+        restaurants
     } catch (e: Exception) {
         emptyList() // Возвращаем пустой список в случае ошибки
     }

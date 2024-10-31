@@ -8,19 +8,21 @@
         android:id="@+id/returnFromPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@+string/Назад"
+        android:layout_marginTop="112dp"
+        android:layout_marginBottom="196dp"
+        android:text="Назад"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.615" />
+        app:layout_constraintTop_toBottomOf="@+id/exitAcc"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/loginPage"
         android:layout_width="119dp"
         android:layout_height="37dp"
-        android:text="@+string/Login"
+        android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.141"
@@ -40,10 +42,10 @@
         app:layout_constraintVertical_bias="0.162" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/reviewUserPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@+string/Мои рецензии"
+        android:text="Мои рецензии"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.546"
@@ -55,12 +57,12 @@
         android:id="@+id/exitAcc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@+string/Выйти"
+        android:layout_marginBottom="356dp"
+        android:text="Выйти"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.534"
+        app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
         app:layout_constraintVertical_bias="0.243" />
 
     <TextView
@@ -68,7 +70,7 @@
         android:layout_width="309dp"
         android:layout_height="27dp"
         android:layout_marginBottom="282dp"
-        android:text="@+string/TextView"
+        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
