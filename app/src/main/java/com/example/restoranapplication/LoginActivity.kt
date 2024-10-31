@@ -3,6 +3,7 @@ package com.example.restoranapplication
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -12,10 +13,16 @@ import com.example.restoranapplication.data.addUser
 import com.example.restoranapplication.data.findUserByLogin
 
 class LoginActivity : BaseActivity() {
+    override fun onSwipeLeft() {
+        Log.w("Gesture", "gegeg")
+        navigateToActivity(MainActivity::class.java)
+    }
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
+
+
         val userList = getUserList()
         val button = findViewById<Button>(R.id.returnButton)
         button.setOnClickListener {
@@ -89,8 +96,10 @@ class LoginActivity : BaseActivity() {
                                 "зарегистрирован как обычный пользователь"
                     )
                 else
-                    showDialog("Error", "Данный аккаунт " +
-                            "зарегистрирован как администатор")
+                    showDialog(
+                        "Error", "Данный аккаунт " +
+                                "зарегистрирован как администатор"
+                    )
                 return@setOnClickListener
             }
             loggedUser = tempUser

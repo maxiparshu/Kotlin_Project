@@ -26,14 +26,11 @@ class UsersItemAdapter(
             R.layout.users_list_item, parent, false
         )
 
-        // Найдите TextView для логина и статуса администратора
         val loginTextView = view.findViewById<TextView>(R.id.loginTextView)
         val statusTextView = view.findViewById<TextView>(R.id.statusTextView)
 
-        // Установите логин пользователя
         loginTextView.text = user?.login
 
-        // Установите статус администратора
         statusTextView.text = if (user?.isAdmin == true) {
             "Администатор"
         } else {
@@ -45,7 +42,8 @@ class UsersItemAdapter(
                     it.reviews,
                     rests,
                     listener,
-                    UsersPageActivity::class.java.name
+                    UsersPageActivity::class.java.name,
+                    UserData(id = "")
                 )
             }
         }

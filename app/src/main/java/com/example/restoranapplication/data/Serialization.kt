@@ -1,6 +1,5 @@
 package com.example.restoranapplication.data
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.SetOptions
@@ -26,14 +25,14 @@ suspend fun getAllUsers(): List<UserData> {
         val result = db.collection("users").get().await()
         result.forEach { document ->
             val user = document.toObject(UserData::class.java).apply {
-                id = document.id // Устанавливаем id документа
+                id = document.id
             }
             Log.w("Firestore", "With id ${user.id}")
-            users.add(user) // Добавляем объект UserData в список users
+            users.add(user)
         }
         users
     } catch (e: Exception) {
-        emptyList() // Возвращаем пустой список в случае ошибки
+        emptyList()
     }
 }
 fun updateUsers(userId: String, updatedData: UserData) {
@@ -69,14 +68,14 @@ suspend fun getAllRestaurants(): List<RestaurantData> {
         val result = db.collection("restaurants").get().await()
         result.forEach { document ->
             val restaurant = document.toObject(RestaurantData::class.java).apply {
-                id = document.id // Устанавливаем id документа
+                id = document.id
             }
             Log.w("Firestore", "Restaurant with id ${restaurant.id}")
-            restaurants.add(restaurant) // Добавляем объект UserData в список users
+            restaurants.add(restaurant)
         }
         restaurants
     } catch (e: Exception) {
-        emptyList() // Возвращаем пустой список в случае ошибки
+        emptyList()
     }
 }
 

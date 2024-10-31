@@ -9,6 +9,9 @@ import com.example.restoranapplication.listView.UsersItemAdapter
 
 class UsersPageActivity : BaseActivity() {
     @SuppressLint("MissingInflatedId")
+    override fun onSwipeLeft() {
+        navigateToActivity(MainActivity::class.java)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.users_page)

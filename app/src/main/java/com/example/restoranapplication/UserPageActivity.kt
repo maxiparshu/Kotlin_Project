@@ -8,6 +8,10 @@ import android.widget.TextView
 import com.example.restoranapplication.helpers.showReviewsDialog
 
 class UserPageActivity : BaseActivity() {
+    override fun onSwipeLeft() {
+        navigateToActivity(MainActivity::class.java)
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,23 +24,29 @@ class UserPageActivity : BaseActivity() {
 
         loginLabel.clearComposingText()
         idLabel.clearComposingText()
-        idLabel.text ="id: ${loggedUser.id}"
+        idLabel.text = "id: ${loggedUser.id}"
         loginLabel.text = loggedUser.login
-        reviewButton.setOnClickListener{
-            this.showReviewsDialog(loggedUser.reviews, getRestList(), this, UserPageActivity::class.java.name)
+        reviewButton.setOnClickListener {
+            this.showReviewsDialog(
+                loggedUser.reviews,
+                getRestList(),
+                this,
+                UserPageActivity::class.java.name,
+                loggedUser
+            )
         }
         if (loggedUser.isAdmin)
             statusLabel.text = "Администратор"
         else
             statusLabel.text = "Пользователь"
         val returnButton = findViewById<Button>(R.id.returnFromPage)
-        returnButton.setOnClickListener{
+        returnButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
         val exitAcc = findViewById<Button>(R.id.exitAcc)
-        exitAcc.setOnClickListener{
+        exitAcc.setOnClickListener {
             flagIsUserLogged = false
             loggedUser.isAdmin = false
             val intent = Intent(this, MainActivity::class.java)

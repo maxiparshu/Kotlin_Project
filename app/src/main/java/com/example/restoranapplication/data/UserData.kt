@@ -12,7 +12,7 @@ data class ReviewData(
 
 data class RestaurantInfo(
     val rest: String = "",
-    val name: String = "",
+    var name: String = "",
 )
 
 data class UserData(
@@ -28,8 +28,8 @@ fun findUserByLogin(users: List<UserData>, login: String): UserData? {
     return users.find { it.login == login }
 }
 
-fun findReviewByRestaurantID(reviews: List<ReviewData>, id: String): Boolean {
-    return reviews.find { it.rest == id } != null
+fun findReviewByRestaurantID(reviews: List<ReviewData>, id: String): ReviewData? {
+    return reviews.find { it.rest == id }
 }
 
 fun findFavouritesByRestaurantID(reviews: List<RestaurantInfo>, id: String): RestaurantInfo? {

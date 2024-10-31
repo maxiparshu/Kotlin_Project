@@ -58,11 +58,10 @@ class MainActivity : BaseActivity() {
                     loggedUser.favouriteRest,
                     getRestList(),
                     this,
-                    MainActivity::class.java.name
+                    MainActivity::class.java.name,
+                    loggedUser
                 )
             }
         }
-
-
     }
 }

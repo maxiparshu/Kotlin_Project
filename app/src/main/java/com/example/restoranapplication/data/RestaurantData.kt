@@ -17,6 +17,6 @@ data class RestaurantData(
     var ratesAmount: Int = 0
 )
 
-fun findRestaurantByName(rest: List<RestaurantData>, id: String): RestaurantData? {
+fun findRestaurantById(rest: List<RestaurantData>, id: String): RestaurantData? {
     return rest.find { it.id == id }
 }

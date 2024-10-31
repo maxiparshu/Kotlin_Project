@@ -21,6 +21,10 @@ import kotlinx.coroutines.launch
 
 
 class RestaurantListActivity : BaseActivity() {
+    override fun onSwipeLeft() {
+        navigateToActivity(MainActivity::class.java)
+    }
+
     private fun showAddRestaurantDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_restaurant, null)
         val editTextName = dialogView.findViewById<EditText>(R.id.editTextRestaurantName)
@@ -55,20 +59,11 @@ class RestaurantListActivity : BaseActivity() {
                         lifecycleScope.launch {
                             saveRestList(getAllRestaurants())
                             val intent = intent
-                            finish() // Завершаем текущую активность
+                            finish()
                             startActivity(intent)
                         }
-                        val restaurantListView = findViewById<ListView>(R.id.restaurantList)
-                        val restaurantList = getRestList()
-                        restaurantListView.adapter =
-                            RestaurantItemAdapter(
-                                this,
-                                R.layout.restaraunt_list_item,
-                                loggedUser.isAdmin,
-                                restaurantList,
-                                this
-                            )
-                        // Здесь можно добавить ресторан в список или обработать его дальше
+
+
                         Toast.makeText(
                             this,
                             "Ресторан добавлен: ${restaurant.name}",
