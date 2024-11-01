@@ -3,7 +3,6 @@ package com.example.restoranapplication
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -13,10 +12,22 @@ import com.example.restoranapplication.data.addUser
 import com.example.restoranapplication.data.findUserByLogin
 
 class LoginActivity : BaseActivity() {
+    companion object {
+        init {
+            System.loadLibrary("login") // замените на имя вашей библиотеки без префикса "lib"
+        }
+    }
+    private external fun checkLogin(
+        login: String,
+        password: String,
+        isAdminChecked: Boolean,
+        users: List<UserData>,
+    ): String
+
     override fun onSwipeLeft() {
-        Log.w("Gesture", "gegeg")
         navigateToActivity(MainActivity::class.java)
     }
+
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,40 +80,23 @@ class LoginActivity : BaseActivity() {
             showDialog("Error", "Аккаунт с введеным логином уже существует")
         }
         loginButton.setOnClickListener {
-            if (loginEdit.text.isEmpty()) {
-                showDialog("Warning", "Введите логин")
+            val result = checkLogin(
+                loginEdit.text.toString(), passwordEdit.text.toString(),
+                checkBox.isChecked, userList
+            )
+            if (result[0] != 'S') {
+                showDialog("Error", result)
                 return@setOnClickListener
             }
-            if (passwordEdit.text.isEmpty()) {
-                showDialog("Warning", "Введите пароль")
-                return@setOnClickListener
-            }
-            val tempUser = findUserByLogin(userList, loginEdit.text.toString())
-            if (tempUser == null) {
-                showDialog(
-                    "Error", "Аккаунт с логином ${loginEdit.text} " +
-                            "не существуют"
-                )
-                return@setOnClickListener
-            }
-            if (tempUser.password != passwordEdit.text.toString()) {
-                showDialog("Error", "Введен неправильный пароль")
-                return@setOnClickListener
-            }
-            if (tempUser.isAdmin != checkBox.isChecked) {
-                if (!tempUser.isAdmin)
-                    showDialog(
-                        "Error", "Данный аккаунт " +
-                                "зарегистрирован как обычный пользователь"
-                    )
-                else
-                    showDialog(
-                        "Error", "Данный аккаунт " +
-                                "зарегистрирован как администатор"
-                    )
-                return@setOnClickListener
-            }
-            loggedUser = tempUser
+            val id = result.drop(1)
+            loggedUser = UserData(
+                id = id,
+                login= loginEdit.text.toString(),
+                password= passwordEdit.text.toString(),
+                isAdmin= checkBox.isChecked,
+                reviews = emptyList(),
+                favouriteRest = emptyList()
+            )
             flagIsUserLogged = true
             Toast.makeText(
                 this,
@@ -114,6 +108,4 @@ class LoginActivity : BaseActivity() {
             finish()
         }
     }
-
-
 }

@@ -105,10 +105,6 @@ open class BaseActivity : AppCompatActivity(), OnRestaurantSelectedListener,
         }
     }
 
-    fun clearAllData() {
-        sharedPreferences.edit().clear().apply()
-    }
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null)
             return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
@@ -165,7 +161,7 @@ open class BaseActivity : AppCompatActivity(), OnRestaurantSelectedListener,
     }
 
     override fun onDoubleTap(p0: MotionEvent): Boolean {
-        onDoubleTapAction()
+        onDoubleTapAction(p0)
         return true
     }
 
@@ -173,7 +169,7 @@ open class BaseActivity : AppCompatActivity(), OnRestaurantSelectedListener,
         return false
     }
 
-    open fun onDoubleTapAction() {
+    open fun onDoubleTapAction(p0: MotionEvent) {
     }
 
     open fun onSwipeLeft() {

@@ -9,6 +9,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cppFlags += ""
+            }
+        }
         applicationId = "com.example.restoranapplication"
         minSdk = 31
         targetSdk = 34
@@ -34,9 +39,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
 }
 dependencies {
-    //noinspection GradleDependency
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation(libs.firebase.analytics)
     implementation (libs.glide)

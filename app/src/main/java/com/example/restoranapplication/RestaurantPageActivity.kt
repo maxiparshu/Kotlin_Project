@@ -1,5 +1,9 @@
 package com.example.restoranapplication
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +11,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.restoranapplication.data.MenuItem
@@ -31,6 +37,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class RestaurantPageActivity : BaseActivity() {
+    private lateinit var rootLayout: ConstraintLayout
     override fun onSwipeLeft() {
         val callingActivityName = intent.getStringExtra("calling_activity")
         if (callingActivityName != null) {
@@ -40,14 +47,16 @@ class RestaurantPageActivity : BaseActivity() {
         }
     }
 
-    override fun onDoubleTapAction() {
-        val restaurant = getRestaurant() // Получение текущего ресторана
-        handleFavouriteAction(restaurant) // Обработка добавления/удаления из избранного
+    override fun onDoubleTapAction(p0: MotionEvent) {
+        val restaurant = getRestaurant()
+        handleFavouriteAction(restaurant)
+        showHeart(p0.x, p0.y)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.restoran_window)
+        rootLayout = findViewById(R.id.root_layout)
         val restaurant = getRestaurant()
         if (restaurant != null) {
 
@@ -388,4 +397,38 @@ class RestaurantPageActivity : BaseActivity() {
             }
         }
     }
+
+    private fun showHeart(x: Float, y: Float) {
+        // Используем LayoutInflater для "раздутия" представления сердечка
+        val heartImageView = ImageView(this)
+        heartImageView.setImageResource(R.drawable.heart) // Замените на ваше изображение сердечка
+        heartImageView.layoutParams =
+            FrameLayout.LayoutParams(80, 80) // Установите размеры сердечка
+
+        // Устанавливаем позицию сердечка
+        heartImageView.x = x - heartImageView.height
+        heartImageView.y = y + heartImageView.height * 3
+
+        // Добавляем сердечко в контейнер
+        rootLayout.addView(heartImageView)
+
+        // Запускаем анимацию
+        val scaleX = ObjectAnimator.ofFloat(heartImageView, "scaleX", 1f, 1.5f)
+        val scaleY = ObjectAnimator.ofFloat(heartImageView, "scaleY", 1f, 1.5f)
+        val alpha = ObjectAnimator.ofFloat(heartImageView, "alpha", 1f, 0f)
+
+        val animatorSet = AnimatorSet()
+        animatorSet.play(scaleX).with(scaleY).with(alpha)
+        animatorSet.duration = 600 // Длительность анимации
+
+        animatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                // Удаляем сердечко после анимации
+                rootLayout.removeView(heartImageView)
+            }
+        })
+
+        animatorSet.start()
+    }
+
 }
